@@ -112,7 +112,7 @@ public class LexicalAnalyzer {
 		} else if (isIdentifier(tkValue)) {
 			return Tokens.id;
 		} else if (isString(tkValue)) {
-			return Tokens.tString;
+			return Tokens.tLitString;
 		}
 
 		return Tokens.tUnknown;
@@ -130,10 +130,10 @@ public class LexicalAnalyzer {
 	private Tokens checkTypeNumber(String tkValue) {
 
 		if (tkValue.contains(".")) {
-			return Tokens.tFloat;
+			return Tokens.tLitFloat;
 		}
 
-		return Tokens.tInt;
+		return Tokens.tLitInt;
 	}
 
 	private boolean isNumber(String tkValue) {

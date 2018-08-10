@@ -67,7 +67,10 @@ public enum Tokens {
 	fDiffDates(63),
 	fLength(64),
 	fCompare(65),
-	fSort(66);
+	fSort(66),
+	tLitString(67),
+	tLitInt(68),
+	tLitFloat(69);
 
 	private int value;
 
