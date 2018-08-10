@@ -30,6 +30,7 @@ public class LexicalTable {
 		lexemMap.put("isnot", Tokens.opRel3);
 
 		lexemMap.put("<-", Tokens.opAtrib);
+		lexemMap.put("->", Tokens.opAccess);
 		lexemMap.put("++", Tokens.opIncre);
 		lexemMap.put("--", Tokens.opIncre);
 
@@ -45,8 +46,8 @@ public class LexicalTable {
 
 		// Separador
 
-		lexemMap.put(".", Tokens.sep1);
-		lexemMap.put("in", Tokens.sep2);
+		lexemMap.put(".", Tokens.point);
+		lexemMap.put("in", Tokens.in);
 
 		// Palavras-reservadas (comandos e operadores)
 
@@ -75,6 +76,20 @@ public class LexicalTable {
 		lexemMap.put("comments", Tokens.tComments);
 		lexemMap.put("date", Tokens.tDate);
 		lexemMap.put("dates", Tokens.tDates);
+		
+		//funções
+		
+		lexemMap.put("add", Tokens.fAdd);
+		lexemMap.put("remove", Tokens.fRemove);
+		lexemMap.put("sort", Tokens.fSort);
+		lexemMap.put("upper", Tokens.fUpper);
+		lexemMap.put("lower", Tokens.fLower);
+		lexemMap.put("collect_data", Tokens.fCollectData);
+		lexemMap.put("refresh", Tokens.fRefresh);
+		lexemMap.put("diff_dates", Tokens.fDiffDates);
+		lexemMap.put("length", Tokens.fLength);
+		lexemMap.put("compare", Tokens.fCompare);
+		
 
 		lexemMap.put("main", Tokens.main);
 
@@ -100,18 +115,10 @@ public class LexicalTable {
 		symbolList.add('*');
 		symbolList.add('/');
 		symbolList.add('%');
-		symbolList.add('#');
-		//symbolList.add('greater-equal');
-		//symbolList.add('less');
-		//symbolList.add('greater');
-		//symbolList.add('less-equal');
-		//symbolList.add('in');
-		//symbolList.add('<-');
 		symbolList.add('(');
 		symbolList.add(')');
 		symbolList.add('{');
 		symbolList.add('}');
-		symbolList.add('\'');
 
 
 	}

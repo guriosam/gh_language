@@ -10,7 +10,7 @@ public class GHStart {
 
 	public static void main(String[] args) {
 		
-		String path = "D:/test.gh";
+		String path = "test.gh";
 		LexicalAnalyzer lexical = new LexicalAnalyzer(path);
 		lexical.readFile();
 		while(lexical.hasMoreTokens()){

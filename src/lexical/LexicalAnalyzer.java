@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
 
@@ -23,166 +25,122 @@ public class LexicalAnalyzer {
 		this.tkLine = 0;
 	}
 
-	public Token nextToken() {
+	public List<Token> nextToken() {
 
-		Token token;
-
-		char currentChar;
-		String tkValue = "";
-
-		tkCol = cCol;
 		tkLine = currentLine;
 
-		currentChar = line.charAt(cCol);
+		for(Character c : LexicalTable.symbolList){
+			organizeSymbols(c);
+		}
+		
+		System.out.println(line);
 
-		while (currentChar == ' ' || currentChar == '\t') {
-			currentChar = nextChar();
-			tkCol++;
+		List<String> lineWords = new ArrayList<String>();
+
+		//Split por espa√ßos ou tabs, menos se estiver entre aspas
+		Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
+		Matcher regexMatcher = regex.matcher(line);
+		
+		while (regexMatcher.find()) {
+			lineWords.add(regexMatcher.group());
+		} 
+		
+		int count = 1;
+
+		List<Token> tokens = new ArrayList<>();
+
+		for (String word : lineWords) {
+
+			cCol += word.length() + 1;
+			if (cCol > line.length()) {
+				cCol = line.length() - 1;
+			}
+			tkCol = count * word.length();
+
+			Tokens category = analyzeCategory(word);
+
+			Token token = new Token();
+			token.setValue(word);
+			token.setLine(tkLine);
+			token.setColumn(tkCol);
+			token.setCategory(category);
+			count++;
+
+			if (token.getCategory().equals(Tokens.cmt)) {
+				if (hasMoreTokens()) {
+					return nextToken();
+				}
+			}
+			
+			tokens.add(token);
 		}
 
-		if (Character.toString(currentChar).matches("\\d")) {
-			tkValue += currentChar;
-			currentChar = nextChar();
-			while (Character.toString(currentChar).matches("\\d")) {
-				tkValue += currentChar;
-				currentChar = nextChar();
-			}
-			if (currentChar == '.') {
-				tkValue += currentChar;
-				currentChar = nextChar();
-				while (Character.toString(currentChar).matches("\\d")) {
-					tkValue += currentChar;
-					currentChar = nextChar();
-				}
-			}
+		return tokens;
 
-			if (currentChar != ' ') {
-				while (!LexicalTable.symbolList.contains(currentChar)) {
-					tkValue += currentChar;
-					currentChar = nextChar();
-					if (currentChar == LINE_BREAK) {
-						break;
-					}
-				}
-			}
-		} else {
+	}
 
-			while (!LexicalTable.symbolList.contains(currentChar)) {
-				tkValue += currentChar;
-				currentChar = nextChar();
-				if (currentChar == LINE_BREAK) {
-					break;
-				}
-			}
+	private void organizeSymbols(Character c) {
+		
+		if(c == '.' || c == ' '){
+			return;
 		}
+		
+		line = line.replace(" " + c, c + "");
+		line = line.replace(c + "", " " + c);
+		
+		line = line.replace(c + " ", c + "");
+		line = line.replace(c + "", c + " ");
 
-		if (tkValue == "") {
-
-			switch (currentChar) {
-
-			case '"':
-
-				tkValue += currentChar;
-				currentChar = nextChar();
-
-				if (currentChar == '"') {
-					tkValue += currentChar;
-					cCol++;
-					break;
-				}
-
-				while (currentChar != LINE_BREAK) {
-					tkValue += currentChar;
-					currentChar = nextChar();
-
-					if (currentChar == '"') {
-						tkValue += currentChar;
-						cCol++;
-						break;
-					}
-				}
-				break;
-
-			case '/':
-				tkValue += currentChar;
-				currentChar = nextChar();
-
-				if (currentChar == '#') {
-					tkValue += currentChar;
-					currentLine++;
-					cCol = 0;
-				}
-				break;
-
-			case '#':
-				tkValue += currentChar;
-				currentChar = nextChar();
-				if (currentChar == '/') {
-					tkValue += currentChar;
-					currentChar = nextChar();
-				}
-				break;
-
-			case '<':
-			case '>':
-			case '~':
-			case '=': // Compondo um token que pode ser <=, >=, ~= ou ==
-
-				tkValue += currentChar;
-				currentChar = nextChar();
-				if (currentChar == '=') {
-					tkValue += currentChar;
-					cCol++;
-				}
-				break;
-
-			case '+': // Compondo um token que pode ser operador aditivo, de
-				tkValue += currentChar;
-				currentChar = nextChar();
-
-				if (currentChar == '+') {
-					tkValue += currentChar;
-					currentChar = nextChar();
-				}
-
-				break;
-
-			default:
-				tkValue += currentChar;
-				cCol++;
-				break;
-			}
+		if(c == '-'){
+			line = line.replace("< -", "<-");
+			line = line.replace("- >", "->");
 		}
-
-		tkValue = tkValue.trim();
-
-		token = new Token();
-
-		token.setValue(tkValue);
-		token.setLine(tkLine);
-		token.setColumn(tkCol);
-		token.setCategory(analyzeCategory(tkValue));
-
-		if (token.getCategory().equals(Tokens.cmt)) {
-			if (hasMoreTokens()) {
-				return nextToken();
-			}
+		
+		if(c == '/'){
+			line = line.replace("/ #", "/# ");
 		}
-		return token;
-
+		
+		
 	}
 
 	private Tokens analyzeCategory(String tkValue) {
 
-		if (isOpNegUnary(tkValue)) {
-			return Tokens.opNegUn;
-		} else if (LexicalTable.lexemMap.containsKey(tkValue)) {
+		if (LexicalTable.lexemMap.containsKey(tkValue)) {
 			return LexicalTable.lexemMap.get(tkValue);
+		} else if (isNumber(tkValue)) {
+			return checkTypeNumber(tkValue);
 		} else if (isIdentifier(tkValue)) {
 			return Tokens.id;
+		} else if (isString(tkValue)) {
+			return Tokens.tString;
 		}
 
 		return Tokens.tUnknown;
+	}
+
+	private boolean isString(String tkValue) {
+		if (tkValue.startsWith("\"")) {
+			if (tkValue.endsWith("\"")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private Tokens checkTypeNumber(String tkValue) {
+
+		if (tkValue.contains(".")) {
+			return Tokens.tFloat;
+		}
+
+		return Tokens.tInt;
+	}
+
+	private boolean isNumber(String tkValue) {
+		if (tkValue.matches("[0-9]")) {
+			return true;
+		}
+		return false;
 	}
 
 	public void readFile() {
@@ -196,8 +154,6 @@ public class LexicalAnalyzer {
 				System.out.println(filePath + " not exists");
 				return;
 			}
-			
-			System.out.println(f.getAbsolutePath());
 
 			reader = new BufferedReader(new FileReader(filePath));
 
@@ -230,89 +186,16 @@ public class LexicalAnalyzer {
 
 		if (!lines.isEmpty()) {
 			if (currentLine < lines.size()) {
-
 				line = lines.get(currentLine);
 				line = line.replace('\t', ' ');
-
-				if (line.substring(cCol).matches("\\s*")) {
-					currentLine++;
-					cCol = 0;
-					while (currentLine < lines.size()) {
-						line = lines.get(currentLine);
-						if (line.matches("\\s*")) {
-							currentLine++;
-						} else {
-							return true;
-						}
-					}
-				} else if (cCol < line.length()) {
-					return true;
-				} else {
-					currentLine++;
-					cCol = 0;
-					while (currentLine < lines.size()) {
-						line = lines.get(currentLine);
-						if (line.matches("\\s*")) {
-							currentLine++;
-						} else {
-							return true;
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-
-	}
-
-	private Character nextChar() {
-
-		cCol++;
-
-		if (cCol < line.length()) {
-			return line.charAt(cCol);
-		} else {
-			return LINE_BREAK;
-		}
-
-	}
-
-	private Character previousNotBlankChar() {
-
-		int previousColumn = tkCol - 1;
-		char previousChar;
-
-		while (previousColumn >= 0) {
-			previousChar = line.charAt(previousColumn);
-			if (previousChar != ' ' && previousChar != '\t') {
-				return previousChar;
-			}
-			previousColumn--;
-		}
-		return null;
-
-	}
-
-	private boolean isOpNegUnary(String tkValue) {
-		if (tkValue.equals("-")) { 
-			Character previousChar = previousNotBlankChar();
-			if ((previousChar != null) && Character.toString(previousChar).matches("[_a-zA-Z0-9]")) {
-				return false;
-			} else {
+				currentLine++;
+				cCol = 0;
 				return true;
 			}
 		}
-		return false;
-	}
 
-	private boolean isChar(String tkValue) {
-		if (tkValue.matches("'(.?)'")) {
-			return true;
-		} else if (tkValue.startsWith("'")) {
-			printError("caracter n„o fechado corretamente com '.", tkValue);
-		}
 		return false;
+
 	}
 
 	private boolean isIdentifier(String tkValue) {
@@ -321,13 +204,13 @@ public class LexicalAnalyzer {
 			if (tkValue.length() < 16) {
 				return true;
 			} else {
-				printError("identificador muito longo.", tkValue);
+				printError("Identificador muito longo.", tkValue);
 			}
 
 		} else if (tkValue.matches("[^_a-zA-Z\"'].*")) {
-			printError("identificador n„o iniciado com letra ou '_'.", tkValue);
+			printError("Identificador n√£o iniciado com letra ou '_'.", tkValue);
 		} else if (tkValue.matches("[_a-zA-Z].*")) {
-			printError("identificador contÈm caracter inv·lido.", tkValue);
+			printError("Identificador cont√©m caracter inv√°lido.", tkValue);
 
 		}
 		return false;

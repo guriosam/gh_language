@@ -35,8 +35,8 @@ public enum Tokens {
 	paramEnd(31),
 	cmt(32),
 	term(33),
-	sep1(34),
-	sep2(35),
+	point(34),
+	in(35),
 	prRead(36),
 	prWrite(37),
 	prIf(38),
@@ -56,8 +56,19 @@ public enum Tokens {
 	opRel2(52),
 	opRel3(53),
 	opConc(54),
-	tUnknown(55);
-	
+	opAccess(55),
+	tUnknown(56), 
+	fAdd(57),
+	fRemove(58),
+	fUpper(59),
+	fLower(60),
+	fCollectData(61),
+	fRefresh(62),
+	fDiffDates(63),
+	fLength(64),
+	fCompare(65),
+	fSort(66);
+
 	private int value;
 
 	private Tokens(int i){
