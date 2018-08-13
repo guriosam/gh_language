@@ -9,8 +9,8 @@ public class GHStart {
 
 	public static void main(String[] args) {
 		
-		String path = args[0];
-		//String path = "test_codes/test.gh";
+		//String path = args[0];
+		String path = "test_codes/test3.gh";
 		try {
 			LexicalAnalyzer lexical = new LexicalAnalyzer(path);
 			while(lexical.hasMoreTokens()) {

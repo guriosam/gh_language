@@ -1,0 +1,14 @@
+void main() {
+        [0001, 0000] (0010,      tVoid) {void}
+        [0001, 0005] (0008,       main) {main}
+        [0001, 0009] (0037, paramStart) {(}
+        [0001, 0010] (0038,   paramEnd) {)}
+        [0001, 0012] (0035,   escStart) {{}
+ print("Hello World");
+        [0002, 0001] (0044,    prWrite) {print}
+        [0002, 0006] (0037, paramStart) {(}
+        [0002, 0007] (0074, tLitString) {"Hello World"}
+        [0002, 0020] (0038,   paramEnd) {)}
+        [0002, 0021] (0040,       term) {;}
+}
+        [0003, 0000] (0036,     escEnd) {}}
