@@ -1,20 +1,24 @@
 package start;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
 
 import lexical.LexicalAnalyzer;
+import lexical.Token;
 
 public class GHStart {
 
 	public static void main(String[] args) {
 		
-		String path = "test.gh";
-		LexicalAnalyzer lexical = new LexicalAnalyzer(path);
-		lexical.readFile();
-		while(lexical.hasMoreTokens()){
-			lexical.nextToken();
+		String path = args[0];
+		//String path = "test_codes/test.gh";
+		try {
+			LexicalAnalyzer lexical = new LexicalAnalyzer(path);
+			while(lexical.hasMoreTokens()) {
+				Token token = lexical.nextToken();
+			}
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("The file that you are trying to open doesn't exists." + "\n" + "Path: " + path);
 		}
 	}
 	

@@ -2,6 +2,14 @@ package lexical;
 
 public enum Tokens {
 	
+	tErrMissBfPoint(-7),
+	tErrMissAfPoint(-6),
+	tErrIdInv(-5),
+	tErrIdInitInv(-4),
+	tErrIdCtInv(-3),
+	tErrStrQu(-2),
+	tError(-1),
+	tEOF(0),
 	main(1),
 	id(2),
 	tVoid(3),
@@ -70,7 +78,8 @@ public enum Tokens {
 	fSort(66),
 	tLitString(67),
 	tLitInt(68),
-	tLitFloat(69);
+	tLitFloat(69),
+	tLitBool(70);
 
 	private int value;
 

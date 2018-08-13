@@ -1,224 +1,321 @@
 package lexical;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
 
 	private List<String> lines;
-	private int currentLine, cCol, tkCol, tkLine;
+	private int currentRow, currentCol;
+	private Token currentToken;
 	private String line;
-	private String filePath;
+	private BufferedReader reader;
+	private String tokenValue;
 
-	private final char LINE_BREAK = '\n';
-
-	public LexicalAnalyzer(String filePath) {
-		lines = new ArrayList<>();
-		this.filePath = filePath;
-		this.tkCol = 0;
-		this.tkLine = 0;
+	public LexicalAnalyzer(String filePath) throws FileNotFoundException {
+		reader = new BufferedReader(new FileReader(filePath));
+		currentRow = currentCol = 0;
 	}
 
-	public List<Token> nextToken() {
+	public Token nextToken() {
 
-		tkLine = currentLine;
+		char current = line.charAt(currentCol);
+		tokenValue = "";
+		int tokenCol = currentCol;
+		int tokenLine = currentRow;
 
-		for(Character c : LexicalTable.symbolList){
-			organizeSymbols(c);
+		// Ignoring spaces and tabs
+		while (current == ' ' || current == '\t') {
+			current = nextChar();
+			tokenCol++;
 		}
-		
-		System.out.println(line);
 
-		List<String> lineWords = new ArrayList<String>();
+		if (checkIfDigitOrId(current)) {
+			return setupToken(tokenValue, tokenLine, tokenCol);
+		}
 
-		//Split por espaços ou tabs, menos se estiver entre aspas
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
-		Matcher regexMatcher = regex.matcher(line);
-		
-		while (regexMatcher.find()) {
-			lineWords.add(regexMatcher.group());
-		} 
-		
-		int count = 1;
+		if (checkIfConstantString(current)) {
+			return setupToken(tokenValue, tokenLine, tokenCol);
+		}
 
-		List<Token> tokens = new ArrayList<>();
+		if (checkCasesSymbols(current)) {
+			return setupToken(tokenValue, tokenLine, tokenCol);
+		}
 
-		for (String word : lineWords) {
+		return setupToken(tokenValue, tokenLine, tokenCol);
+	}
 
-			cCol += word.length() + 1;
-			if (cCol > line.length()) {
-				cCol = line.length() - 1;
+	private Token setupToken(String tokenValue, int tokenLine, int tokenCol) {
+		// previousToken = currentToken;
+		Token token = new Token(tokenValue.trim(), tokenLine, tokenCol, analyzeCategory(tokenValue));
+		currentToken = token;
+		System.out.println(token);
+		return token;
+	}
+
+	private boolean checkCasesSymbols(char current) {
+
+		switch (current) {
+
+		case '<':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '-') {
+				tokenValue += current;
+				currentCol++;
+				return true;
+			} else {
+				return false;
 			}
-			tkCol = count * word.length();
 
-			Tokens category = analyzeCategory(word);
+		case '-':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '>') {
+				tokenValue += current;
+				currentCol++;
+			} else if (current == '-') {
+				tokenValue += current;
+				currentCol++;
+			}
+			return true;
 
-			Token token = new Token();
-			token.setValue(word);
-			token.setLine(tkLine);
-			token.setColumn(tkCol);
-			token.setCategory(category);
-			count++;
+		case '+':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '=') {
+				tokenValue += current;
+				currentCol++;
+			} else if (current == '+') {
+				tokenValue += current;
+				currentCol++;
+			}
+			tokenValue += current;
+			currentCol++;
+			return true;
 
-			if (token.getCategory().equals(Tokens.cmt)) {
-				if (hasMoreTokens()) {
-					return nextToken();
+		case '%':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		case '*':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		case '/':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '#') {
+				tokenValue += current;
+				currentCol++;
+			}
+			return true;
+		case ';':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		case '(':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		case ')':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		case '{':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		case '}':
+			tokenValue += current;
+			current = nextChar();
+			return true;
+		}
+
+		return false;
+
+	}
+
+	private boolean checkIfConstantString(char current) {
+
+		if (current == '"') {
+			tokenValue += current;
+			current = nextChar();
+
+			// Empty String
+			if (current == '"') {
+				tokenValue += current;
+				currentCol++;
+			} else {
+				// Until \n or "
+				while (current != '\n') {
+					// Ignoring scape characters
+					if (current == '\\') {
+						current = nextChar();
+					}
+					tokenValue += current;
+					current = nextChar();
+					if (current == '"') {
+						tokenValue += current;
+						currentCol++;
+						break;
+					}
+
 				}
 			}
-			
-			tokens.add(token);
 		}
 
-		return tokens;
-
+		return !tokenValue.isEmpty();
 	}
 
-	private void organizeSymbols(Character c) {
+	private boolean checkIfDigitOrId(char current) {
 		
-		if(c == '.' || c == ' '){
-			return;
-		}
-		
-		line = line.replace(" " + c, c + "");
-		line = line.replace(c + "", " " + c);
-		
-		line = line.replace(c + " ", c + "");
-		line = line.replace(c + "", c + " ");
+		//Int or float
+		if (Character.toString(current).matches("\\d")) {
+			tokenValue += current;
+			current = nextChar();
+			while (Character.toString(current).matches("\\d")) {
+				tokenValue += current;
+				current = nextChar();
+			}
+			if (current == '.') {
+				tokenValue += current;
+				current = nextChar();
+				while (Character.toString(current).matches("\\d")) {
+					tokenValue += current;
+					current = nextChar();
+				}
+			}
+		} else {
+			//ids
+			while (!LexicalTable.symbolList.contains(current)) {
+				if (current == '\"') {
+					break;
+				}
 
-		if(c == '-'){
-			line = line.replace("< -", "<-");
-			line = line.replace("- >", "->");
+				tokenValue += current;
+				current = nextChar();
+
+				if (current == ' ') {
+					break;
+				}
+			}
+
 		}
-		
-		if(c == '/'){
-			line = line.replace("/ #", "/# ");
+
+		return !(tokenValue.equals(""));
+	}
+
+	private boolean nextLine() {
+		String fileLine = new String();
+		try {
+			fileLine = reader.readLine();
+
+			if (fileLine != null) {
+				line = fileLine;
+				return true;
+			}
+
+		}  catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-		
+
+		return false;
+
 	}
 
 	private Tokens analyzeCategory(String tkValue) {
 
-		if (LexicalTable.lexemMap.containsKey(tkValue)) {
-			return LexicalTable.lexemMap.get(tkValue);
-		} else if (isNumber(tkValue)) {
-			return checkTypeNumber(tkValue);
-		} else if (isIdentifier(tkValue)) {
-			return Tokens.id;
-		} else if (isString(tkValue)) {
-			return Tokens.tLitString;
-		}
-
-		return Tokens.tUnknown;
-	}
-
-	private boolean isString(String tkValue) {
-		if (tkValue.startsWith("\"")) {
-			if (tkValue.endsWith("\"")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private Tokens checkTypeNumber(String tkValue) {
-
-		if (tkValue.contains(".")) {
-			return Tokens.tLitFloat;
-		}
-
-		return Tokens.tLitInt;
-	}
-
-	private boolean isNumber(String tkValue) {
-		if (tkValue.matches("[0-9]")) {
-			return true;
-		}
-		return false;
-	}
-
-	public void readFile() {
-
-		BufferedReader reader = null;
-		try {
-
-			File f = new File(filePath);
-
-			if (!f.exists()) {
-				System.out.println(filePath + " not exists");
-				return;
-			}
-
-			reader = new BufferedReader(new FileReader(filePath));
-
-			// read file line by line
-			String line = reader.readLine();
-
-			while (line != null) {
-				lines.add(line);
-				line = reader.readLine();
-			}
-
-			reader.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-
-				}
-			}
+		if (LexicalTable.lexemMap.containsKey(tkValue.trim())) {
+			return LexicalTable.lexemMap.get(tkValue.trim());
+		} else {
+			return isConsOrId(tkValue);
 		}
 
 	}
 
 	public boolean hasMoreTokens() {
 
-		if (!lines.isEmpty()) {
-			if (currentLine < lines.size()) {
-				line = lines.get(currentLine);
-				line = line.replace('\t', ' ');
-				currentLine++;
-				cCol = 0;
-				return true;
-			}
-		}
+		//first line
+		if (currentRow == 0 && currentCol == 0) {
+			nextLine();
 
-		return false;
-
-	}
-
-	private boolean isIdentifier(String tkValue) {
-
-		if (tkValue.matches("[_a-zA-Z][_a-zA-Z0-9]*")) {
-			if (tkValue.length() < 16) {
-				return true;
+			if (line == null) {
+				printCodeInfo("");
+				return false;
 			} else {
-				printError("Identificador muito longo.", tkValue);
+				printCodeInfo(line);
 			}
-
-		} else if (tkValue.matches("[^_a-zA-Z\"'].*")) {
-			printError("Identificador não iniciado com letra ou '_'.", tkValue);
-		} else if (tkValue.matches("[_a-zA-Z].*")) {
-			printError("Identificador contém caracter inválido.", tkValue);
-
 		}
-		return false;
+		
+		//if there are more lines..
+		if (line.substring(currentCol).matches("\\s*")) {
+			while (nextLine()) {
+				currentRow++;
+				currentCol = 0;
+
+				printCodeInfo(line);
+
+				if (!line.matches("\\s*")) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return true;
+		}
 	}
 
-	private void printError(String string, String token) {
-		System.err.println("Erro na <linha, coluna> " + "= <" + currentLine + "," + cCol + ">. " + "'" + token + "'"
-				+ " " + string);
-		System.exit(1);
+	private void printCodeInfo(String info) {
+		System.out.println(info.replace('\t', ' '));
+	}
+
+	private Tokens isConsOrId(String tokenValue) {
+
+		if (tokenValue.matches("\\d+")) {
+			return Tokens.tLitInt;
+		} else if (tokenValue.matches("(\\d)+\\.(\\d)+")) {
+			return Tokens.tLitFloat;
+		} else if (tokenValue.startsWith("\"")) {
+			if (tokenValue.length() > 1 && tokenValue.endsWith("\"")) {
+				return Tokens.tLitString;
+			} else {
+				// Missing terminating character "
+				return Tokens.tErrStrQu;
+			}
+		} else if (tokenValue.equals("true") || tokenValue.equals("false")) {
+			return Tokens.tLitBool;
+		} else if (tokenValue.matches("[a-z_A-Z](\\w)*")) {
+			return Tokens.id;
+		} else if (tokenValue.matches("\\.\\d+")) {
+			// Missing number before decimal point;
+			return Tokens.tErrMissBfPoint;
+		} else if (tokenValue.matches("\\d+\\.")) {
+			// Missing number after decimal point;
+			return Tokens.tErrMissAfPoint;
+		} else if (tokenValue.matches("[a-z_A-Z](.)*")) {
+			// Id contains invalid characters;
+			return Tokens.tErrIdCtInv;
+		} else if (tokenValue.matches("[^a-z_A-Z&|](\\w)*")) {
+			// Invalid id starting character
+			return Tokens.tErrIdInitInv;
+		} else if (tokenValue.matches("[^a-z_A-Z&|](.)*")) {
+			// Invalid id
+			return Tokens.tErrIdInv;
+		}
+
+		return Tokens.tUnknown;
+	}
+
+	private Character nextChar() {
+		currentCol++;
+		if (currentCol < line.length()) {
+			return line.charAt(currentCol);
+		}
+
+		return '\n';
 	}
 }

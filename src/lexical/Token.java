@@ -7,14 +7,19 @@ public class Token {
 	private int line;
 	private int column;
 
-	public Token() {
-
-	}
 	
-	/*@Override
+	@Override
 	public String toString() {
-		return "<" + line + "," + column + "> " + category + " = '" + value + "'";
-	}*/
+		return String.format("        [%04d, %04d] (%04d, %10s) {%s}", line + 1 , column, category.ordinal(), category, value);
+	}
+
+	public Token(String value, int line, int column, Tokens category) {
+		super();
+		this.value = value;
+		this.category = category;
+		this.line = line;
+		this.column = column;
+	}
 
 	public String getValue() {
 		return value;

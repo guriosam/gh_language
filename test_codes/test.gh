@@ -3,7 +3,7 @@ void main( ) {
 	repository github_project -> collect_data(project_name);
 	commits project_commits <- github_project -> commit_list;
 		
-	foreach commit_1 in project_commits {
+	foreach commit_1 in <  project_commits {
 	
 		if (commit_1 -> id is 2){
 		

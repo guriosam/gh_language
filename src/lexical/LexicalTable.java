@@ -20,7 +20,7 @@ public class LexicalTable {
 		lexemMap.put("*", Tokens.opAritMul);
 		lexemMap.put("/", Tokens.opAritMul);
 		lexemMap.put("%", Tokens.opAritMul);
-		lexemMap.put("+=", Tokens.opConc);
+	
 
 		lexemMap.put("greater", Tokens.opRel1);
 		lexemMap.put("less", Tokens.opRel1);
@@ -33,6 +33,7 @@ public class LexicalTable {
 		lexemMap.put("->", Tokens.opAccess);
 		lexemMap.put("++", Tokens.opIncre);
 		lexemMap.put("--", Tokens.opIncre);
+		lexemMap.put("+=", Tokens.opConc);
 
 		lexemMap.put("(", Tokens.paramStart);
 		lexemMap.put(")", Tokens.paramEnd);
@@ -89,14 +90,13 @@ public class LexicalTable {
 		lexemMap.put("diff_dates", Tokens.fDiffDates);
 		lexemMap.put("length", Tokens.fLength);
 		lexemMap.put("compare", Tokens.fCompare);
-		
 
 		lexemMap.put("main", Tokens.main);
 
 		lexemMap.put("if", Tokens.prIf);
 		lexemMap.put("else", Tokens.prElse);
 		lexemMap.put("while", Tokens.prWhile);
-		lexemMap.put("for", Tokens.prFor);
+		lexemMap.put("foreach", Tokens.prFor);
 
 		lexemMap.put("not", Tokens.opLogicNeg);
 		lexemMap.put("and", Tokens.opLogicAnd);
@@ -106,9 +106,7 @@ public class LexicalTable {
 		lexemMap.put("read", Tokens.prRead);
 		lexemMap.put("return", Tokens.prReturn);
 
-		// S�mbolos que podem indicador pr�ximo token
-		symbolList.add(' ');
-		symbolList.add('.');
+		//symbolList.add('.');
 		symbolList.add(';');
 		symbolList.add('+');
 		symbolList.add('-');
@@ -119,7 +117,7 @@ public class LexicalTable {
 		symbolList.add(')');
 		symbolList.add('{');
 		symbolList.add('}');
-
+		symbolList.add('<');
 
 	}
 
