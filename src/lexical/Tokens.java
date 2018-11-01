@@ -79,7 +79,8 @@ public enum Tokens {
 	tLitString(67),
 	tLitInt(68),
 	tLitFloat(69),
-	tLitBool(70);
+	tLitBool(70),
+	comma(71);
 
 	private int value;
 

@@ -1,4 +1,4 @@
-void main( ) {
+void main() {
 	
 	float mean <- 0.0;
 	int x;
@@ -10,6 +10,6 @@ void main( ) {
 	read(z);
 	
 	mean <- (x + y + z) / 3;
-
+	
 	print(mean);
 }

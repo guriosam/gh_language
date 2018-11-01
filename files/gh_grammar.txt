@@ -1,0 +1,140 @@
+S -> Code
+
+Code -> Ft main Pdl Body
+Code -> Ft main Pdl Body Code
+
+
+Fn -> main
+Fn -> fAdd
+Fn -> fRemove
+Fn -> fSort
+Fn -> fUpper
+Fn -> fLower
+Fn -> fLength
+Fn -> fRefresh
+Fn -> fDiff_dates
+Fn -> fCollectData
+Fn -> fCompare
+
+Pdl -> paramStart Pdl paramEnd
+Pdl -> paramStart paramEnd
+Pdl -> Type id
+Pdl -> Type id Pdl1
+Pdl1 -> comma Pdl
+
+Fc -> paramStart LitIdL paramEnd
+
+Fd -> paramStart Pdl paramEnd term
+
+Decl -> Type id Inst
+Decl -> Type id term
+
+Inst -> opAtrib LitIds term
+Inst -> opAccess LitId term
+
+Atrib -> id opAtrib Exp term
+
+LitIds -> Cid
+LitIds -> Lid
+LitIds -> Sid
+LitIds -> LitId
+
+LitId -> id 
+LitId -> id opAccess id
+LitId -> Fn Fc
+
+Type -> Vt
+Type -> Lt
+
+Vt -> tInt
+Vt -> tFloat
+Vt -> tString
+Vt -> tBool
+Vt -> tCommit
+Vt -> tUser
+Vt -> tRepository
+Vt -> tFile
+Vt -> tIssue
+Vt -> tPullRequest
+Vt -> tComment
+Vt -> tDate
+
+Lt -> tInts
+Lt -> tFloats
+Lt -> tStrings
+Lt -> tBools
+Lt -> tCommits
+Lt -> tUsers
+Lt -> tRepositories
+Lt -> tFiles
+Lt -> tIssues
+Lt -> tPullRequests
+Lt -> tComments
+Lt -> tDates
+
+Ft -> Type
+Ft -> tVoid
+
+Command -> prWrite Exp term
+Command -> prWrite paramStart Sid paramEnd term
+Command -> prRead paramStart id paramEnd term
+Command -> prWhile Exp Body                       
+Command -> prFor id in id Body   
+Command -> prIf Exp Body                          
+Command -> prElse Body                                            
+
+LitIdL -> LitIds comma LitIdL
+LitIdL -> LitIds
+
+Body -> escStart BodyPart 
+
+BodyPart -> Decl BodyPart
+BodyPart -> Atrib BodyPart
+BodyPart -> Command BodyPart
+BodyPart -> Conc BodyPart
+BodyPart -> Return escEnd
+BodyPart -> escEnd
+
+
+Exp -> paramStart Exp paramEnd Exp2
+Exp -> paramStart Exp paramEnd
+Exp -> paramStart Exp paramEnd Exp1
+
+Exp -> ExpA 
+Exp -> ExpL 
+
+ExpA -> LitId
+ExpA -> Cid
+ExpL -> Lid
+
+Exp -> ExpA Exp2
+Exp2 -> OpA ExpA1
+Exp2 -> OpC ExpA1
+
+ExpA1 -> ExpA
+ExpA1 -> ExpA Exp2
+ExpA1 -> ExpC Exp2
+
+Exp -> ExpL Exp1
+Exp1 -> OpL ExpL
+
+
+OpA -> opAritAd
+OpA -> opAritMul
+OpL -> opLogicAnd
+OpL -> opLogicOr
+OpC -> opRel1
+OpC -> opRel2
+OpC -> OpRel3
+
+Cid -> tLitInt
+Cid -> tLitFloat
+Lid -> tLitBool
+Sid -> tLitString
+
+Conc -> Cid Conc1 term
+Conc -> Sid Conc1 term
+Conc -> LitId Conc1 term
+Conc1 -> opConc LitIds 
+
+Return -> prReturn Exp term

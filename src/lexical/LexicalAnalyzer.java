@@ -33,6 +33,7 @@ public class LexicalAnalyzer {
 			tokenCol++;
 		}
 
+		
 		if (checkIfDigitOrId(current)) {
 			return setupToken(tokenValue, tokenLine, tokenCol);
 		}
@@ -52,7 +53,6 @@ public class LexicalAnalyzer {
 		// previousToken = currentToken;
 		Token token = new Token(tokenValue.trim(), tokenLine, tokenCol, analyzeCategory(tokenValue));
 		currentToken = token;
-		System.out.println(token);
 		return token;
 	}
 

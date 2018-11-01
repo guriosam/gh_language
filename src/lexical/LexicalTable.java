@@ -48,6 +48,7 @@ public class LexicalTable {
 		// Separador
 
 		lexemMap.put(".", Tokens.point);
+		lexemMap.put(",", Tokens.comma);
 		lexemMap.put("in", Tokens.in);
 
 		// Palavras-reservadas (comandos e operadores)

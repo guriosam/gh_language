@@ -20,6 +20,11 @@ public class Token {
 		this.line = line;
 		this.column = column;
 	}
+	
+	public Token(Tokens category) {
+		super();
+		this.category = category;
+	}
 
 	public String getValue() {
 		return value;
