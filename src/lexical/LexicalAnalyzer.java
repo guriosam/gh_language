@@ -270,7 +270,8 @@ public class LexicalAnalyzer {
 	}
 
 	private void printCodeInfo(String info) {
-		System.out.println(info.replace('\t', ' '));
+		info = info.replace('\t', ' ');
+		 System.out.format("|%04d|  %s\n", currentRow+1, info.trim());
 	}
 
 	private Tokens isConsOrId(String tokenValue) {

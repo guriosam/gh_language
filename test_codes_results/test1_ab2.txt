@@ -1,23 +1,38 @@
-void main() {
-        [0001, 0000] (0010,      tVoid) {void}
-        [0001, 0005] (0008,       main) {main}
-          Ft ->  tVoid
-        [0001, 0009] (0037, paramStart) {(}
-        [0001, 0010] (0038,   paramEnd) {)}
-        [0001, 0012] (0035,   escStart) {{}
-          Pdl ->  paramStart paramEnd
- print("Hello World");
-        [0002, 0001] (0044,    prWrite) {print}
-        [0002, 0006] (0037, paramStart) {(}
-        [0002, 0007] (0074, tLitString) {"Hello World"}
-        [0002, 0020] (0038,   paramEnd) {)}
-          Sid ->  tLitString
-        [0002, 0021] (0040,       term) {;}
-}
-        [0003, 0000] (0036,     escEnd) {}}
-          Command ->  prWrite paramStart Sid paramEnd term
-          BodyPart ->  escEnd
-          BodyPart ->  Command BodyPart
-          Body ->  escStart BodyPart
-          Code ->  Ft main Pdl Body
+|0001|  void main() {
+                [0001, 0000] (0010,      tVoid) {void}
+        FuncTypes ->  tVoid
+                [0001, 0005] (0008,       main) {main}
+                [0001, 0009] (0037, paramStart) {(}
+                [0001, 0010] (0038,   paramEnd) {)}
+|0002|  print("Hello World");
+                [0001, 0012] (0035,   escStart) {{}
+                [0002, 0001] (0044,    prWrite) {print}
+                [0002, 0006] (0037, paramStart) {(}
+                [0002, 0007] (0074, tLitString) {"Hello World"}
+        StringConst ->  tLitString
+        Consts ->  StringConst
+        ExpressionEnd ->  Consts
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+                [0002, 0020] (0038,   paramEnd) {)}
+        ExpressionEnd ->  paramStart Expression paramEnd
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+|0003|  }
+                [0002, 0021] (0040,       term) {;}
+        Command ->  prWrite Expression term
+        BodyPart ->  escEnd
+        BodyPart ->  Command BodyPart
+        Body ->  escStart BodyPart
+        Code ->  FuncTypes main paramStart paramEnd Body
 ---------- Code Accepted ----------

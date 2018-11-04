@@ -17,7 +17,7 @@ public class Production {
 
 	@Override
 	public String toString() {
-		String ret = "          " + head + " -> ";
+		String ret = "        " + head + " -> ";
 		for (String nt : body) {
 			ret += " " + nt;
 		}

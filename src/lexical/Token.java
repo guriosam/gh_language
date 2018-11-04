@@ -10,7 +10,7 @@ public class Token {
 	
 	@Override
 	public String toString() {
-		return String.format("        [%04d, %04d] (%04d, %10s) {%s}", line + 1 , column, category.ordinal(), category, value);
+		return String.format("                [%04d, %04d] (%04d, %10s) {%s}", line + 1 , column, category.ordinal(), category, value);
 	}
 
 	public Token(String value, int line, int column, Tokens category) {

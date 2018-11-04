@@ -1,125 +1,167 @@
-void main() {
-        [0001, 0000] (0010,      tVoid) {void}
-        [0001, 0005] (0008,       main) {main}
-          Ft ->  tVoid
-        [0001, 0009] (0037, paramStart) {(}
-        [0001, 0010] (0038,   paramEnd) {)}
-        [0001, 0012] (0035,   escStart) {{}
-          Pdl ->  paramStart paramEnd
- 
- float mean <- 0.0;
-        [0003, 0001] (0013,     tFloat) {float}
-        [0003, 0007] (0009,         id) {mean}
-          Vt ->  tFloat
-          Type ->  Vt
-        [0003, 0012] (0050,    opAtrib) {<-}
-        [0003, 0015] (0076,  tLitFloat) {0.0}
-        [0003, 0018] (0040,       term) {;}
-          Cid ->  tLitFloat
-          LitIds ->  Cid
- int x;
-        [0004, 0001] (0011,       tInt) {int}
-          Inst ->  opAtrib LitIds term
-          Decl ->  Type id Inst
-        [0004, 0005] (0009,         id) {x}
-          Vt ->  tInt
-          Type ->  Vt
-        [0004, 0006] (0040,       term) {;}
- int y;
-        [0005, 0001] (0011,       tInt) {int}
-          Decl ->  Type id term
-        [0005, 0005] (0009,         id) {y}
-          Vt ->  tInt
-          Type ->  Vt
-        [0005, 0006] (0040,       term) {;}
- int z;
-        [0006, 0001] (0011,       tInt) {int}
-          Decl ->  Type id term
-        [0006, 0005] (0009,         id) {z}
-          Vt ->  tInt
-          Type ->  Vt
-        [0006, 0006] (0040,       term) {;}
- 
- read(x);
-        [0008, 0001] (0043,     prRead) {read}
-          Decl ->  Type id term
-        [0008, 0005] (0037, paramStart) {(}
-        [0008, 0006] (0009,         id) {x}
-        [0008, 0007] (0038,   paramEnd) {)}
-        [0008, 0008] (0040,       term) {;}
- read(y);
-        [0009, 0001] (0043,     prRead) {read}
-          Command ->  prRead paramStart id paramEnd term
-        [0009, 0005] (0037, paramStart) {(}
-        [0009, 0006] (0009,         id) {y}
-        [0009, 0007] (0038,   paramEnd) {)}
-        [0009, 0008] (0040,       term) {;}
- read(z);
-        [0010, 0001] (0043,     prRead) {read}
-          Command ->  prRead paramStart id paramEnd term
-        [0010, 0005] (0037, paramStart) {(}
-        [0010, 0006] (0009,         id) {z}
-        [0010, 0007] (0038,   paramEnd) {)}
-        [0010, 0008] (0040,       term) {;}
- 
- mean <- (x + y + z) / 3;
-        [0012, 0001] (0009,         id) {mean}
-          Command ->  prRead paramStart id paramEnd term
-        [0012, 0006] (0050,    opAtrib) {<-}
-        [0012, 0009] (0037, paramStart) {(}
-        [0012, 0010] (0009,         id) {x}
-        [0012, 0012] (0055,   opAritAd) {+}
-          LitId ->  id
-          ExpA ->  LitId
-        [0012, 0014] (0009,         id) {y}
-          OpA ->  opAritAd
-        [0012, 0016] (0055,   opAritAd) {+}
-          LitId ->  id
-          ExpA ->  LitId
-        [0012, 0018] (0009,         id) {z}
-          OpA ->  opAritAd
-        [0012, 0019] (0038,   paramEnd) {)}
-          LitId ->  id
-          ExpA ->  LitId
-          ExpA1 ->  ExpA
-          Exp2 ->  OpA ExpA1
-          ExpA1 ->  ExpA Exp2
-          Exp2 ->  OpA ExpA1
-          Exp ->  ExpA Exp2
-        [0012, 0021] (0056,  opAritMul) {/}
-        [0012, 0023] (0075,    tLitInt) {3}
-          OpA ->  opAritMul
-        [0012, 0024] (0040,       term) {;}
-          Cid ->  tLitInt
-          ExpA ->  Cid
-          ExpA1 ->  ExpA
-          Exp2 ->  OpA ExpA1
-          Exp ->  paramStart Exp paramEnd Exp2
- 
- print(mean);
-        [0014, 0001] (0044,    prWrite) {print}
-          Atrib ->  id opAtrib Exp term
-        [0014, 0006] (0037, paramStart) {(}
-        [0014, 0007] (0009,         id) {mean}
-        [0014, 0011] (0038,   paramEnd) {)}
-          LitId ->  id
-          ExpA ->  LitId
-          Exp ->  ExpA
-        [0014, 0012] (0040,       term) {;}
-          Exp ->  paramStart Exp paramEnd
-}
-        [0015, 0000] (0036,     escEnd) {}}
-          Command ->  prWrite Exp term
-          BodyPart ->  escEnd
-          BodyPart ->  Command BodyPart
-          BodyPart ->  Atrib BodyPart
-          BodyPart ->  Command BodyPart
-          BodyPart ->  Command BodyPart
-          BodyPart ->  Command BodyPart
-          BodyPart ->  Decl BodyPart
-          BodyPart ->  Decl BodyPart
-          BodyPart ->  Decl BodyPart
-          BodyPart ->  Decl BodyPart
-          Body ->  escStart BodyPart
-          Code ->  Ft main Pdl Body
+|0001|  void main() {
+                [0001, 0000] (0010,      tVoid) {void}
+        FuncTypes ->  tVoid
+                [0001, 0005] (0008,       main) {main}
+                [0001, 0009] (0037, paramStart) {(}
+                [0001, 0010] (0038,   paramEnd) {)}
+|0002|  
+|0003|  float mean <- 0.0;
+                [0001, 0012] (0035,   escStart) {{}
+                [0003, 0001] (0013,     tFloat) {float}
+        VariableTypes ->  tFloat
+        Type ->  VariableTypes
+                [0003, 0007] (0009,         id) {mean}
+                [0003, 0012] (0050,    opAtrib) {<-}
+                [0003, 0015] (0076,  tLitFloat) {0.0}
+        NumConst ->  tLitFloat
+        Consts ->  NumConst
+        ExpressionEnd ->  Consts
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+|0004|  int x;
+                [0003, 0018] (0040,       term) {;}
+        VarDecl ->  Type id opAtrib Expression term
+                [0004, 0001] (0011,       tInt) {int}
+        VariableTypes ->  tInt
+        Type ->  VariableTypes
+                [0004, 0005] (0009,         id) {x}
+|0005|  int y;
+                [0004, 0006] (0040,       term) {;}
+        VarDecl ->  Type id term
+                [0005, 0001] (0011,       tInt) {int}
+        VariableTypes ->  tInt
+        Type ->  VariableTypes
+                [0005, 0005] (0009,         id) {y}
+|0006|  int z;
+                [0005, 0006] (0040,       term) {;}
+        VarDecl ->  Type id term
+                [0006, 0001] (0011,       tInt) {int}
+        VariableTypes ->  tInt
+        Type ->  VariableTypes
+                [0006, 0005] (0009,         id) {z}
+|0007|  
+|0008|  read(x);
+                [0006, 0006] (0040,       term) {;}
+        VarDecl ->  Type id term
+                [0008, 0001] (0043,     prRead) {read}
+                [0008, 0005] (0037, paramStart) {(}
+                [0008, 0006] (0009,         id) {x}
+        Var ->  id
+                [0008, 0007] (0038,   paramEnd) {)}
+|0009|  read(y);
+                [0008, 0008] (0040,       term) {;}
+        Command ->  prRead paramStart Var paramEnd term
+                [0009, 0001] (0043,     prRead) {read}
+                [0009, 0005] (0037, paramStart) {(}
+                [0009, 0006] (0009,         id) {y}
+        Var ->  id
+                [0009, 0007] (0038,   paramEnd) {)}
+|0010|  read(z);
+                [0009, 0008] (0040,       term) {;}
+        Command ->  prRead paramStart Var paramEnd term
+                [0010, 0001] (0043,     prRead) {read}
+                [0010, 0005] (0037, paramStart) {(}
+                [0010, 0006] (0009,         id) {z}
+        Var ->  id
+                [0010, 0007] (0038,   paramEnd) {)}
+|0011|  
+|0012|  mean <- (x + y + z) / 3;
+                [0010, 0008] (0040,       term) {;}
+        Command ->  prRead paramStart Var paramEnd term
+                [0012, 0001] (0009,         id) {mean}
+        Var ->  id
+        ExpressionEnd ->  Var
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+                [0012, 0006] (0050,    opAtrib) {<-}
+                [0012, 0009] (0037, paramStart) {(}
+                [0012, 0010] (0009,         id) {x}
+        Var ->  id
+        ExpressionEnd ->  Var
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+                [0012, 0012] (0055,   opAritAd) {+}
+                [0012, 0014] (0009,         id) {y}
+        Var ->  id
+        ExpressionEnd ->  Var
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionAdd opAritAd ExpressionMult
+                [0012, 0016] (0055,   opAritAd) {+}
+                [0012, 0018] (0009,         id) {z}
+        Var ->  id
+        ExpressionEnd ->  Var
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionAdd opAritAd ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+                [0012, 0019] (0038,   paramEnd) {)}
+        ExpressionEnd ->  paramStart Expression paramEnd
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+                [0012, 0021] (0056,  opAritMul) {/}
+                [0012, 0023] (0075,    tLitInt) {3}
+        NumConst ->  tLitInt
+        Consts ->  NumConst
+        ExpressionEnd ->  Consts
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionMult opAritMul ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  Expression opAtrib ExpressionOr
+|0013|  
+|0014|  print(mean);
+                [0012, 0024] (0040,       term) {;}
+                [0014, 0001] (0044,    prWrite) {print}
+                [0014, 0006] (0037, paramStart) {(}
+                [0014, 0007] (0009,         id) {mean}
+        Var ->  id
+        ExpressionEnd ->  Var
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+                [0014, 0011] (0038,   paramEnd) {)}
+        ExpressionEnd ->  paramStart Expression paramEnd
+        ExpressionNeg ->  ExpressionEnd
+        ExpressionMult ->  ExpressionNeg
+        ExpressionAdd ->  ExpressionMult
+        ExpressionRel ->  ExpressionAdd
+        ExpressionAnd ->  ExpressionRel
+        ExpressionOr ->  ExpressionAnd
+        Expression ->  ExpressionOr
+|0015|  }
+                [0014, 0012] (0040,       term) {;}
+        Command ->  prWrite Expression term
+        BodyPart ->  escEnd
+        BodyPart ->  Command BodyPart
+        BodyPart ->  Expression term BodyPart
+        BodyPart ->  Command BodyPart
+        BodyPart ->  Command BodyPart
+        BodyPart ->  Command BodyPart
+        BodyPart ->  VarDecl BodyPart
+        BodyPart ->  VarDecl BodyPart
+        BodyPart ->  VarDecl BodyPart
+        BodyPart ->  VarDecl BodyPart
+        Body ->  escStart BodyPart
+        Code ->  FuncTypes main paramStart paramEnd Body
 ---------- Code Accepted ----------

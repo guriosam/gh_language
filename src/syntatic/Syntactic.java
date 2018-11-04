@@ -39,7 +39,7 @@ public class Syntactic {
 
 		if (lexical.hasMoreTokens()) {
 			token = lexical.nextToken();
-			System.out.println(token);
+	
 		}
 
 		if (token == null) {
@@ -64,6 +64,7 @@ public class Syntactic {
 				return false;
 
 			}
+			
 
 			switch (action.charAt(0)) {
 
@@ -72,8 +73,8 @@ public class Syntactic {
 						token == null ? "$" : token.getCategory().toString(), true));
 
 				if (lexical.hasMoreTokens()) {
-					token = lexical.nextToken();
 					System.out.println(token);
+					token = lexical.nextToken();
 
 					if (token == null) {
 						return false;
@@ -87,7 +88,6 @@ public class Syntactic {
 			case 'r':
 
 				int prod = Integer.valueOf(action.substring(1));
-
 				Production production = grammar.getProductions().get(prod);
 				System.out.println(production.toString());
 
