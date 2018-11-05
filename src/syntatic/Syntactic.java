@@ -39,7 +39,6 @@ public class Syntactic {
 
 		if (lexical.hasMoreTokens()) {
 			token = lexical.nextToken();
-	
 		}
 
 		if (token == null) {
