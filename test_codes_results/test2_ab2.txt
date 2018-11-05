@@ -4,8 +4,8 @@
                 [0001, 0005] (0008,       main) {main}
                 [0001, 0009] (0037, paramStart) {(}
                 [0001, 0011] (0038,   paramEnd) {)}
-|0002|  string project_name <- "project_name";
                 [0001, 0013] (0035,   escStart) {{}
+|0002|  string project_name <- "project_name";
                 [0002, 0001] (0015,    tString) {string}
         VariableTypes ->  tString
         Type ->  VariableTypes
@@ -22,9 +22,9 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0003|  repository github_project -> collect_data(project_name);
                 [0002, 0038] (0040,       term) {;}
         VarDecl ->  Type id opAtrib Expression term
+|0003|  repository github_project -> collect_data(project_name);
                 [0003, 0001] (0015,    tString) {repository}
         VariableTypes ->  tString
         Type ->  VariableTypes
@@ -48,9 +48,9 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0004|  commits project_commits <- github_project -> commit_list;
                 [0003, 0056] (0040,       term) {;}
         VarDecl ->  Type id opAccess Expression term
+|0004|  commits project_commits <- github_project -> commit_list;
                 [0004, 0001] (0020,   tCommits) {commits}
         ListTypes ->  tCommits
         Type ->  ListTypes
@@ -68,17 +68,15 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0005|  
-|0006|  foreach commit_1 in project_commits {
                 [0004, 0057] (0040,       term) {;}
         VarDecl ->  Type id opAtrib Expression term
+|0006|  foreach commit_1 in project_commits {
                 [0006, 0001] (0048,      prFor) {foreach}
                 [0006, 0009] (0009,         id) {commit_1}
                 [0006, 0018] (0042,         in) {in}
                 [0006, 0021] (0009,         id) {project_commits}
-|0007|  
-|0008|  if (commit_1 -> id greater 2){
                 [0006, 0037] (0035,   escStart) {{}
+|0008|  if (commit_1 -> id greater 2){
                 [0008, 0002] (0045,       prIf) {if}
                 [0008, 0005] (0037, paramStart) {(}
                 [0008, 0006] (0009,         id) {commit_1}
@@ -111,9 +109,8 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0009|  
-|0010|  print("This is America.");
                 [0008, 0031] (0035,   escStart) {{}
+|0010|  print("This is America.");
                 [0010, 0003] (0044,    prWrite) {print}
                 [0010, 0008] (0037, paramStart) {(}
                 [0010, 0009] (0074, tLitString) {"This is America."}
@@ -136,24 +133,22 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0011|  
-|0012|  }
                 [0010, 0028] (0040,       term) {;}
         Command ->  prWrite Expression term
-|0013|  
-|0014|  }
+|0012|  }
                 [0012, 0002] (0036,     escEnd) {}}
         BodyPart ->  escEnd
         BodyPart ->  Command BodyPart
         Body ->  escStart BodyPart
         Command ->  prIf Expression Body
-|0015|  
-|0016|  }
+|0014|  }
                 [0014, 0001] (0036,     escEnd) {}}
         BodyPart ->  escEnd
         BodyPart ->  Command BodyPart
         Body ->  escStart BodyPart
         Command ->  prFor id in id Body
+|0016|  }
+                [0016, 0000] (0036,     escEnd) {}}
         BodyPart ->  escEnd
         BodyPart ->  Command BodyPart
         BodyPart ->  VarDecl BodyPart

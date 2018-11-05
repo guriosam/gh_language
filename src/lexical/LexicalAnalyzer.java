@@ -246,18 +246,19 @@ public class LexicalAnalyzer {
 			if (line == null) {
 				printCodeInfo("");
 				return false;
-			} else {
-				printCodeInfo(line);
+//			} else {
+//				printCodeInfo(line);
 			}
 		}
 		
 		//if there are more lines..
+		
 		if (line.substring(currentCol).matches("\\s*")) {
 			while (nextLine()) {
+				
 				currentRow++;
 				currentCol = 0;
-
-				printCodeInfo(line);
+				//printCodeInfo(line);
 
 				if (!line.matches("\\s*")) {
 					return true;
@@ -319,4 +320,10 @@ public class LexicalAnalyzer {
 
 		return '\n';
 	}
+
+	public String getLine() {
+		return line;
+	}
+
+	
 }

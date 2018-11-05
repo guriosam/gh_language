@@ -4,9 +4,8 @@
                 [0001, 0005] (0008,       main) {main}
                 [0001, 0009] (0037, paramStart) {(}
                 [0001, 0010] (0038,   paramEnd) {)}
-|0002|  
-|0003|  float mean <- 0.0;
                 [0001, 0012] (0035,   escStart) {{}
+|0003|  float mean <- 0.0;
                 [0003, 0001] (0013,     tFloat) {float}
         VariableTypes ->  tFloat
         Type ->  VariableTypes
@@ -23,56 +22,54 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0004|  int x;
                 [0003, 0018] (0040,       term) {;}
         VarDecl ->  Type id opAtrib Expression term
+|0004|  int x;
                 [0004, 0001] (0011,       tInt) {int}
         VariableTypes ->  tInt
         Type ->  VariableTypes
                 [0004, 0005] (0009,         id) {x}
-|0005|  int y;
                 [0004, 0006] (0040,       term) {;}
         VarDecl ->  Type id term
+|0005|  int y;
                 [0005, 0001] (0011,       tInt) {int}
         VariableTypes ->  tInt
         Type ->  VariableTypes
                 [0005, 0005] (0009,         id) {y}
-|0006|  int z;
                 [0005, 0006] (0040,       term) {;}
         VarDecl ->  Type id term
+|0006|  int z;
                 [0006, 0001] (0011,       tInt) {int}
         VariableTypes ->  tInt
         Type ->  VariableTypes
                 [0006, 0005] (0009,         id) {z}
-|0007|  
-|0008|  read(x);
                 [0006, 0006] (0040,       term) {;}
         VarDecl ->  Type id term
+|0008|  read(x);
                 [0008, 0001] (0043,     prRead) {read}
                 [0008, 0005] (0037, paramStart) {(}
                 [0008, 0006] (0009,         id) {x}
         Var ->  id
                 [0008, 0007] (0038,   paramEnd) {)}
-|0009|  read(y);
                 [0008, 0008] (0040,       term) {;}
         Command ->  prRead paramStart Var paramEnd term
+|0009|  read(y);
                 [0009, 0001] (0043,     prRead) {read}
                 [0009, 0005] (0037, paramStart) {(}
                 [0009, 0006] (0009,         id) {y}
         Var ->  id
                 [0009, 0007] (0038,   paramEnd) {)}
-|0010|  read(z);
                 [0009, 0008] (0040,       term) {;}
         Command ->  prRead paramStart Var paramEnd term
+|0010|  read(z);
                 [0010, 0001] (0043,     prRead) {read}
                 [0010, 0005] (0037, paramStart) {(}
                 [0010, 0006] (0009,         id) {z}
         Var ->  id
                 [0010, 0007] (0038,   paramEnd) {)}
-|0011|  
-|0012|  mean <- (x + y + z) / 3;
                 [0010, 0008] (0040,       term) {;}
         Command ->  prRead paramStart Var paramEnd term
+|0012|  mean <- (x + y + z) / 3;
                 [0012, 0001] (0009,         id) {mean}
         Var ->  id
         ExpressionEnd ->  Var
@@ -125,9 +122,8 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  Expression opAtrib ExpressionOr
-|0013|  
-|0014|  print(mean);
                 [0012, 0024] (0040,       term) {;}
+|0014|  print(mean);
                 [0014, 0001] (0044,    prWrite) {print}
                 [0014, 0006] (0037, paramStart) {(}
                 [0014, 0007] (0009,         id) {mean}
@@ -149,9 +145,10 @@
         ExpressionAnd ->  ExpressionRel
         ExpressionOr ->  ExpressionAnd
         Expression ->  ExpressionOr
-|0015|  }
                 [0014, 0012] (0040,       term) {;}
         Command ->  prWrite Expression term
+|0015|  }
+                [0015, 0000] (0036,     escEnd) {}}
         BodyPart ->  escEnd
         BodyPart ->  Command BodyPart
         BodyPart ->  Expression term BodyPart

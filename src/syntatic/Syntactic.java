@@ -2,11 +2,11 @@ package syntatic;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Stack;
 
 import lexical.LexicalAnalyzer;
 import lexical.Token;
-import lexical.Tokens;
 import slr.MySLRGrammar;
 import slr.MySLRTable;
 import slr.Production;
@@ -20,6 +20,7 @@ public class Syntactic {
 	private MySLRGrammar grammar;
 	private MySLRTable actionTable, transitionTable;
 	private Stack<Term> stack;
+	private HashMap<Integer, Boolean> flags;
 
 	public Syntactic(LexicalAnalyzer lexical, String pathGrammar, String pathAction, String pathTransition)
 			throws IOException {
@@ -28,6 +29,7 @@ public class Syntactic {
 		this.transitionTable = new MySLRTable(pathTransition);
 		this.grammar = new MySLRGrammar(pathGrammar);
 		this.stack = new Stack();
+		this.flags = new HashMap<>();
 	}
 
 	@SuppressWarnings("unused")
@@ -63,7 +65,6 @@ public class Syntactic {
 				return false;
 
 			}
-			
 
 			switch (action.charAt(0)) {
 
@@ -71,8 +72,18 @@ public class Syntactic {
 				stack.push(new Term(Integer.valueOf(action.substring(1)),
 						token == null ? "$" : token.getCategory().toString(), true));
 
+				if (!flags.containsKey(token.getLine())) {
+					flags.put(token.getLine(), false);
+				}
+
+				if (!flags.get(token.getLine())) {
+					System.out.format("|%04d|  %s\n", token.getLine() + 1, lexical.getLine().trim());
+					flags.put(token.getLine(), true);
+				}
+
+				System.out.println(token);
 				if (lexical.hasMoreTokens()) {
-					System.out.println(token);
+
 					token = lexical.nextToken();
 
 					if (token == null) {
