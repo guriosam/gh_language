@@ -10,9 +10,9 @@ public enum Tokens {
 	tErrStrQu(-2),
 	tError(-1),
 	tEOF(0),
-	main(1),
+	//main(1),
 	id(2),
-	tVoid(3),
+	//tVoid(3),
 	tInt(4),
 	tInts(5),
 	tFloat(6),
@@ -45,7 +45,7 @@ public enum Tokens {
 	term(33),
 	point(34),
 	in(35),
-	prRead(36),
+	fGet(36),
 	prWrite(37),
 	prIf(38),
 	prElse(39),
@@ -75,12 +75,12 @@ public enum Tokens {
 	fDiffDates(63),
 	fLength(64),
 	fCompare(65),
-	fSort(66),
+	fReverse(66),
 	tLitString(67),
 	tLitInt(68),
 	tLitFloat(69),
 	tLitBool(70),
-	comma(71);
+	comma(71), fPut(72), fSplit(73), fContains(74), fAnalyzeCs(75), fAnalyzeC(76), tSize(77), tNature(78);
 
 	private int value;
 

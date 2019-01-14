@@ -1,16 +1,13 @@
-void main( ) {
-	string project_name <- "project_name";
-	repository github_project -> collect_data(project_name);
-	commits project_commits <- github_project -> commit_list;
+string project_name = "project_name";
+repository github_project = collect_data(project_name);
+commits project_commits = github_project.commit_list;
 
-	foreach commit_1 in project_commits {
+for (commit commit_1 in project_commits) {
 	
-		if (commit_1 -> id greater 2){
+	if (commit_1.id == 2){
 		
-			print("This is America.");
+		print("This is the second commit of the repository.");
 			
-		}	
-	
-	}
+	}	
 	
 }

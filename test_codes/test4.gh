@@ -1,0 +1,33 @@
+repository tomcat = collect_data("tomcat");
+repository derby = collect_data("derby");
+commits commits_project1;
+commits commits_project2;
+
+commits_project1 = tomcat.commit_list;
+commits_project2 = derby.commit_list;
+
+print("Existem " + commits_project1.length() + 
+    " commits no projeto Tomcat");
+print("Existem " + commits_project2.length() + 
+    " commits no projeto Derby");
+
+strings tomcat_authors;
+
+for (string commit_tomcat in commits_project1) {
+    tomcat_authors.add(commit_tomcat.author_login);
+}
+
+strings tomcat_authors;
+
+for (commit commit_derby in commits_project2) {
+    derby_authors.add(commit_derby.author_login);
+}
+
+for (string author_tomcat in tomcat_authors) {
+    for (string author_derby in derby_authors) {
+        if (compare(author_tomcat, author_derby)){
+            print("O usuario " + author_tomcat + 
+                " tem commit no Derby e no Tomcat.\n");
+        }
+    }
+}

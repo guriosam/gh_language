@@ -22,15 +22,15 @@ public class LexicalTable {
 		lexemMap.put("%", Tokens.opAritMul);
 	
 
-		lexemMap.put("greater", Tokens.opRel1);
-		lexemMap.put("less", Tokens.opRel1);
-		lexemMap.put("greater-equal", Tokens.opRel2);
-		lexemMap.put("less-equal", Tokens.opRel2);
-		lexemMap.put("is", Tokens.opRel3);
-		lexemMap.put("isnot", Tokens.opRel3);
+		lexemMap.put(">", Tokens.opRel1);
+		lexemMap.put("<", Tokens.opRel1);
+		lexemMap.put(">=", Tokens.opRel2);
+		lexemMap.put("<=", Tokens.opRel2);
+		lexemMap.put("==", Tokens.opRel3);
+		lexemMap.put("!=", Tokens.opRel3);
 
-		lexemMap.put("<-", Tokens.opAtrib);
-		lexemMap.put("->", Tokens.opAccess);
+		lexemMap.put("=", Tokens.opAtrib);
+		lexemMap.put(".", Tokens.opAccess);
 		lexemMap.put("++", Tokens.opIncre);
 		lexemMap.put("--", Tokens.opIncre);
 		lexemMap.put("+=", Tokens.opConc);
@@ -39,7 +39,7 @@ public class LexicalTable {
 		lexemMap.put(")", Tokens.paramEnd);
 		lexemMap.put("{", Tokens.escStart);
 		lexemMap.put("}", Tokens.escEnd);
-		lexemMap.put("/#", Tokens.cmt);
+		lexemMap.put("//", Tokens.cmt);
 
 		// Terminador
 
@@ -47,13 +47,13 @@ public class LexicalTable {
 
 		// Separador
 
-		lexemMap.put(".", Tokens.point);
+		//lexemMap.put(".", Tokens.point);
 		lexemMap.put(",", Tokens.comma);
 		lexemMap.put("in", Tokens.in);
 
 		// Palavras-reservadas (comandos e operadores)
 
-		lexemMap.put("void", Tokens.tVoid);
+		//lexemMap.put("void", Tokens.tVoid);
 		lexemMap.put("int", Tokens.tInt);
 		lexemMap.put("ints", Tokens.tInts);
 		lexemMap.put("float", Tokens.tFloat);
@@ -65,9 +65,9 @@ public class LexicalTable {
 		lexemMap.put("commit", Tokens.tCommit);
 		lexemMap.put("commits", Tokens.tCommits);
 		lexemMap.put("user", Tokens.tUser);
-		lexemMap.put("user", Tokens.tUsers);
-		lexemMap.put("repository", Tokens.tString);
-		lexemMap.put("repositories", Tokens.tString);
+		lexemMap.put("users", Tokens.tUsers);
+		lexemMap.put("repository", Tokens.tRepository);
+		lexemMap.put("repositories", Tokens.tRepositories);
 		lexemMap.put("file", Tokens.tFile);
 		lexemMap.put("files", Tokens.tFiles);
 		lexemMap.put("issue", Tokens.tIssue);
@@ -78,12 +78,14 @@ public class LexicalTable {
 		lexemMap.put("comments", Tokens.tComments);
 		lexemMap.put("date", Tokens.tDate);
 		lexemMap.put("dates", Tokens.tDates);
+		lexemMap.put("dates", Tokens.tSize);
+		lexemMap.put("dates", Tokens.tNature);
 		
 		//funções
 		
 		lexemMap.put("add", Tokens.fAdd);
 		lexemMap.put("remove", Tokens.fRemove);
-		lexemMap.put("sort", Tokens.fSort);
+		lexemMap.put("reverse", Tokens.fReverse);
 		lexemMap.put("upper", Tokens.fUpper);
 		lexemMap.put("lower", Tokens.fLower);
 		lexemMap.put("collect_data", Tokens.fCollectData);
@@ -91,23 +93,34 @@ public class LexicalTable {
 		lexemMap.put("diff_dates", Tokens.fDiffDates);
 		lexemMap.put("length", Tokens.fLength);
 		lexemMap.put("compare", Tokens.fCompare);
+		lexemMap.put("get", Tokens.fGet);
+		lexemMap.put("put", Tokens.fPut);
+		lexemMap.put("split", Tokens.fSplit);
+		lexemMap.put("contains", Tokens.fContains);
+		lexemMap.put("analyze_commits", Tokens.fAnalyzeCs);
+		lexemMap.put("analyze_commit", Tokens.fAnalyzeC);
 
-		lexemMap.put("main", Tokens.main);
+		//lexemMap.put("main", Tokens.main);
 
 		lexemMap.put("if", Tokens.prIf);
 		lexemMap.put("else", Tokens.prElse);
 		lexemMap.put("while", Tokens.prWhile);
-		lexemMap.put("foreach", Tokens.prFor);
+		lexemMap.put("for", Tokens.prFor);
 
-		lexemMap.put("not", Tokens.opLogicNeg);
-		lexemMap.put("and", Tokens.opLogicAnd);
-		lexemMap.put("or", Tokens.opLogicOr);
+		lexemMap.put("!", Tokens.opLogicNeg);
+		lexemMap.put("&&", Tokens.opLogicAnd);
+		lexemMap.put("||", Tokens.opLogicOr);
 
 		lexemMap.put("print", Tokens.prWrite);
-		lexemMap.put("read", Tokens.prRead);
-		lexemMap.put("return", Tokens.prReturn);
+		//lexemMap.put("read", Tokens.prRead);
+		//lexemMap.put("return", Tokens.prReturn);
+		
+		lexemMap.put("id", Tokens.id);
+		lexemMap.put("tLitString", Tokens.tLitString);
+		lexemMap.put("tLitInt", Tokens.tLitInt);
+		lexemMap.put("tLitFloat", Tokens.tLitFloat);
+		lexemMap.put("tLitBool", Tokens.tLitBool);
 
-		//symbolList.add('.');
 		symbolList.add(';');
 		symbolList.add('+');
 		symbolList.add('-');

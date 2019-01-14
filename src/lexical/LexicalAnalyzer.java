@@ -33,7 +33,6 @@ public class LexicalAnalyzer {
 			tokenCol++;
 		}
 
-		
 		if (checkIfDigitOrId(current)) {
 			return setupToken(tokenValue, tokenLine, tokenCol);
 		}
@@ -60,24 +59,48 @@ public class LexicalAnalyzer {
 
 		switch (current) {
 
+		case '>':
+			tokenValue += current;
+			current = nextChar();
+
+			if (current == '=') {
+				tokenValue += current;
+				currentCol++;
+			}
+			return true;
+
 		case '<':
 			tokenValue += current;
 			current = nextChar();
-			if (current == '-') {
+
+			if (current == '=') {
 				tokenValue += current;
 				currentCol++;
-				return true;
-			} else {
-				return false;
 			}
+			return true;
+
+		case '=':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '=') {
+				tokenValue += current;
+				currentCol++;
+			}
+			return true;
+		case '!':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '=') {
+				tokenValue += current;
+				currentCol++;
+			}
+			return true;
 
 		case '-':
 			tokenValue += current;
 			current = nextChar();
-			if (current == '>') {
-				tokenValue += current;
-				currentCol++;
-			} else if (current == '-') {
+
+			if (current == '-') {
 				tokenValue += current;
 				currentCol++;
 			}
@@ -93,8 +116,6 @@ public class LexicalAnalyzer {
 				tokenValue += current;
 				currentCol++;
 			}
-			tokenValue += current;
-			currentCol++;
 			return true;
 
 		case '%':
@@ -133,6 +154,27 @@ public class LexicalAnalyzer {
 			tokenValue += current;
 			current = nextChar();
 			return true;
+		case '&':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '&') {
+				tokenValue += current;
+				currentCol++;
+				return true;
+			} else {
+				return false;
+			}
+		case '|':
+			tokenValue += current;
+			current = nextChar();
+			if (current == '|') {
+				tokenValue += current;
+				currentCol++;
+				return true;
+			} else {
+				return false;
+			}
+
 		}
 
 		return false;
@@ -172,8 +214,8 @@ public class LexicalAnalyzer {
 	}
 
 	private boolean checkIfDigitOrId(char current) {
-		
-		//Int or float
+
+		// Int or float
 		if (Character.toString(current).matches("\\d")) {
 			tokenValue += current;
 			current = nextChar();
@@ -181,7 +223,7 @@ public class LexicalAnalyzer {
 				tokenValue += current;
 				current = nextChar();
 			}
-			if (current == '.') {
+			if (current == ',') {
 				tokenValue += current;
 				current = nextChar();
 				while (Character.toString(current).matches("\\d")) {
@@ -190,7 +232,7 @@ public class LexicalAnalyzer {
 				}
 			}
 		} else {
-			//ids
+			// ids
 			while (!LexicalTable.symbolList.contains(current)) {
 				if (current == '\"') {
 					break;
@@ -215,11 +257,14 @@ public class LexicalAnalyzer {
 			fileLine = reader.readLine();
 
 			if (fileLine != null) {
+				if(fileLine.contains(".")){
+					fileLine = fileLine.replace(".", " . ");
+				}
 				line = fileLine;
 				return true;
 			}
 
-		}  catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -239,26 +284,24 @@ public class LexicalAnalyzer {
 
 	public boolean hasMoreTokens() {
 
-		//first line
+		// first line
 		if (currentRow == 0 && currentCol == 0) {
 			nextLine();
 
 			if (line == null) {
 				printCodeInfo("");
 				return false;
-//			} else {
-//				printCodeInfo(line);
 			}
 		}
-		
-		//if there are more lines..
-		
+
+		// if there are more lines..
+
 		if (line.substring(currentCol).matches("\\s*")) {
 			while (nextLine()) {
-				
+
 				currentRow++;
 				currentCol = 0;
-				//printCodeInfo(line);
+				// printCodeInfo(line);
 
 				if (!line.matches("\\s*")) {
 					return true;
@@ -272,14 +315,14 @@ public class LexicalAnalyzer {
 
 	private void printCodeInfo(String info) {
 		info = info.replace('\t', ' ');
-		 System.out.format("|%04d|  %s\n", currentRow+1, info.trim());
+		System.out.format("|%04d|  %s\n", currentRow + 1, info.trim());
 	}
 
 	private Tokens isConsOrId(String tokenValue) {
 
 		if (tokenValue.matches("\\d+")) {
 			return Tokens.tLitInt;
-		} else if (tokenValue.matches("(\\d)+\\.(\\d)+")) {
+		} else if (tokenValue.matches("(\\d)+\\,(\\d)+")) {
 			return Tokens.tLitFloat;
 		} else if (tokenValue.startsWith("\"")) {
 			if (tokenValue.length() > 1 && tokenValue.endsWith("\"")) {
@@ -298,13 +341,13 @@ public class LexicalAnalyzer {
 		} else if (tokenValue.matches("\\d+\\.")) {
 			// Missing number after decimal point;
 			return Tokens.tErrMissAfPoint;
-		} else if (tokenValue.matches("[a-z_A-Z](.)*")) {
+		} else if (tokenValue.matches("[a-z_A-Z](,)*")) {
 			// Id contains invalid characters;
 			return Tokens.tErrIdCtInv;
 		} else if (tokenValue.matches("[^a-z_A-Z&|](\\w)*")) {
 			// Invalid id starting character
 			return Tokens.tErrIdInitInv;
-		} else if (tokenValue.matches("[^a-z_A-Z&|](.)*")) {
+		} else if (tokenValue.matches("[^a-z_A-Z&|](,)*")) {
 			// Invalid id
 			return Tokens.tErrIdInv;
 		}
@@ -325,5 +368,4 @@ public class LexicalAnalyzer {
 		return line;
 	}
 
-	
 }

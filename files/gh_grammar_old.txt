@@ -1,0 +1,127 @@
+S -> Code
+
+Code -> FuncTypes main paramStart paramEnd Body
+
+FunctionDecl -> FuncTypes id paramStart ParamDeclList paramEnd Body
+FunctionDecl -> FuncTypes id paramStart paramEnd Body
+
+ParamDeclList -> paramStart Params paramEnd
+ParamDeclList -> paramStart paramEnd
+Params -> Type id
+Params -> Type id ParamDeclListCont
+ParamDeclListCont -> comma Params
+
+VarDecl -> Type id opAtrib Expression term
+VarDecl -> Type id opAccess Expression term
+VarDecl -> Type id term
+
+Consts -> NumConst
+Consts -> LogConst
+Consts -> StringConst
+
+
+Var -> id 
+Var -> id opAccess id
+Var -> FuncAccess
+
+FuncAccess -> FuncName FuncCall
+
+FuncCall -> paramStart ListIds paramEnd
+
+FuncName -> main
+FuncName -> fAdd
+FuncName -> fRemove
+FuncName -> fSort
+FuncName -> fUpper
+FuncName -> fLower
+FuncName -> fLength
+FuncName -> fRefresh
+FuncName -> fDiff_dates
+FuncName -> fCollectData
+FuncName -> fCompare
+
+Type -> VariableTypes
+Type -> ListTypes
+
+VariableTypes -> tInt
+VariableTypes -> tFloat
+VariableTypes -> tString
+VariableTypes -> tBool
+VariableTypes -> tCommit
+VariableTypes -> tUser
+VariableTypes -> tRepository
+VariableTypes -> tFile
+VariableTypes -> tIssue
+VariableTypes -> tPullRequest
+VariableTypes -> tComment
+VariableTypes -> tDate
+
+ListTypes -> tInts
+ListTypes -> tFloats
+ListTypes -> tStrings
+ListTypes -> tBools
+ListTypes -> tCommits
+ListTypes -> tUsers
+ListTypes -> tRepositories
+ListTypes -> tFiles
+ListTypes -> tIssues
+ListTypes -> tPullRequests
+ListTypes -> tComments
+ListTypes -> tDates
+
+FuncTypes -> Type
+FuncTypes -> tVoid
+
+Command -> prWrite Expression term
+Command -> prRead paramStart Var paramEnd term
+Command -> prWhile Expression Body                       
+Command -> prFor id in id Body   
+Command -> prIf Expression Body                          
+Command -> prElse Body                                            
+
+ListIds -> ListIds comma Consts
+ListIds -> Consts
+ListIds -> Var
+
+Body -> escStart BodyPart 
+
+BodyPart -> VarDecl BodyPart
+BodyPart -> Expression term BodyPart
+BodyPart -> Command BodyPart
+BodyPart -> Return escEnd
+BodyPart -> escEnd
+
+Expression -> Expression opAtrib ExpressionOr
+Expression -> Expression opConc ExpressionOr
+Expression -> ExpressionOr
+
+ExpressionOr -> ExpressionOr opLogicOr ExpressionAnd
+ExpressionOr -> ExpressionAnd
+
+ExpressionAnd -> ExpressionAnd opLogicAnd ExpressionRel
+ExpressionAnd -> ExpressionRel
+
+ExpressionRel -> ExpressionRel opRel1 ExpressionAdd
+ExpressionRel -> ExpressionRel opRel2 ExpressionAdd
+ExpressionRel -> ExpressionRel opRel3 ExpressionAdd
+ExpressionRel -> ExpressionAdd
+
+ExpressionAdd -> ExpressionAdd opAritAd ExpressionMult
+ExpressionAdd -> ExpressionMult
+
+ExpressionMult -> ExpressionMult opAritMul ExpressionNeg
+ExpressionMult -> ExpressionNeg
+
+ExpressionNeg -> ExpressionNeg opNeg ExpressionEnd
+ExpressionNeg -> ExpressionEnd
+
+ExpressionEnd -> paramStart Expression paramEnd
+ExpressionEnd -> Consts
+ExpressionEnd -> Var
+
+NumConst -> tLitInt
+NumConst -> tLitFloat
+LogConst -> tLitBool
+StringConst -> tLitString
+
+Return -> prReturn Expression term

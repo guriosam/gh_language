@@ -51,6 +51,7 @@ public class Syntactic {
 		while (!action.equals("acc")) {
 			state = stack.peek().getState();
 
+			//System.out.println(token);
 			tokenColumn = actionTable.getTableHeader().get(token == null ? "$" : token.getCategory().toString());
 
 			action = actionTable.getTableContent()[state][tokenColumn];
