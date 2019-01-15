@@ -23,11 +23,13 @@ Consts -> StringConst
 
 Var -> id 
 Var -> id opAccess id
+Var -> id opAccess FuncAccess
 Var -> FuncAccess
 
 FuncAccess -> FuncName FuncCall
 
 FuncCall -> paramStart ListIds paramEnd
+FuncCall -> paramStart paramEnd
 
 FuncName -> fAdd
 FuncName -> fRemove
@@ -82,9 +84,10 @@ Command -> prElse Body
 
 ForBody -> paramStart VarInst in id paramEnd
 
-ListIds -> ListIds comma Consts
-ListIds -> Consts
 ListIds -> Var
+ListIds -> Consts
+ListIds -> Consts comma ListIds
+ListIds -> Var comma ListIds
 
 Body -> escStart BodyPart escEnd
 
@@ -122,40 +125,9 @@ ExpNeg -> ExpEnd
 ExpEnd -> paramStart Exp paramEnd
 ExpEnd -> Consts
 ExpEnd -> Var
-ExpEnd -> Var StringExprId
 
 NumConst -> tLitInt
 NumConst -> tLitFloat
 LogConst -> tLitBool
 
 StringConst -> tLitString
-StringConst -> tLitString StringExpr
-StringConst -> tLitString StringExprId
-
-StringExprId -> opAritAd Var StringExpr
-StringExprId -> opAritAd Var
-StringExpr -> opAritAd tLitString StringExpr
-StringExpr -> opAritAd tLitString
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

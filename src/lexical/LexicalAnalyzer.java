@@ -260,6 +260,11 @@ public class LexicalAnalyzer {
 				if(fileLine.contains(".")){
 					fileLine = fileLine.replace(".", " . ");
 				}
+				if(fileLine.contains(",")){
+					fileLine = fileLine.replace(",", " , ");
+				
+				}
+				
 				line = fileLine;
 				return true;
 			}
